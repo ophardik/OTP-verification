@@ -12,7 +12,13 @@ const loginSchema=new mongoose.Schema({
     otplogin:{
         type:String,
         required:true,
-    }
+    },
+    otpExpiration:{
+        type:Date,
+        default:Date.now(),
+        get:(otpExpiration)=>otpExpiration.getTime(),
+        set:(otpExpiration)=>new Date(otpExpiration),
+   }
 
 
 });

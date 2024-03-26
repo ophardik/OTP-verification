@@ -60,14 +60,14 @@ const sendOtp =async(req,res)=>{
 const verifyOtp=async(req,res)=>{
     try{
     
-        const {phoneNumber,otp,otplogin}=req.body;
+        const {phoneNumber,otplogin}=req.body;
 
         console.log(otplogin);
 
-        const otpData=await otpModel.findOne({
-            phoneNumber,
-            otp,
-        });
+        // const otpData=await otpModel.findOne({
+        //     phoneNumber,
+        //     otp,
+        // });
 
         const loginData=await loginModel.findOne({
             phoneNumber,
@@ -81,14 +81,14 @@ const verifyOtp=async(req,res)=>{
                });
         }
 
-        if(!otpData){
-            return res.status(400).json({
-                success:false,
-                msg:"Please enter the correct OTP",
-               });
-        }
+        // if(!otpData){
+        //     return res.status(400).json({
+        //         success:false,
+        //         msg:"Please enter the correct OTP",
+        //        });
+        // }
 
-       const isOtpExpired= await otpVerification(otpData.otpExpiration);
+       const isOtpExpired= await otpVerification(loginData.otpExpiration);
 
        if(isOtpExpired){
         return res.status(400).json({
@@ -142,50 +142,104 @@ const signup=async(req,res)=>{
      }
 }
 
-const login=async(req,res)=>{
-    //res.status(201).json({ message: "LOGIN successful" });
-    try{
+// const login=async(req,res)=>{
+//     //res.status(201).json({ message: "LOGIN successful" });
+//     try{
 
-        const{phoneNumber,password}=req.body;
-        const otplogin=otpGenerator.generate(4,{upperCaseAlphabets:false,lowerCaseAlphabets:false,specialChars:false});
+//         const{phoneNumber,password}=req.body;
+//         const otplogin=otpGenerator.generate(4,{upperCaseAlphabets:false,lowerCaseAlphabets:false,specialChars:false});
+//         const cDate=new Date();
+//         // const user=await signupModel.findOneAndUpdate({phoneNumber,password {otp,otpExpiration: new Date(cDate.getTime()) },
+//         // {upsert:true, new:true, setDefaultOnInsert:true, },});
+//         const user = await signupModel.findOneAndUpdate(
+//             { phoneNumber, password },
+//             { otplogin, otpExpiration: new Date(cDate.getTime()) },
+//             { upsert: true, new: true, setDefaultOnInsert: true }
+//         );
+                        
 
-        const user=await signupModel.findOneAndUpdate({phoneNumber,password});
 
-        if(!user){
+//         if(!user){
+//             return res.status(401).json({ message: "Enter correct phoneNumber or password" });
+//         }
+
+       
+//         await twilioClient.messages.create({
+//             body:`Your OTP is${otplogin}`,
+//             to:phoneNumber,
+//             from:process.env.TWILIO_MOBILE_NNUMBER,
+//         });
+
+     
+//         await loginModel.create({
+//             phoneNumber,
+//             password,
+//             otplogin,
+//         })
+
+
+//         return res.status(200).json({
+//             success:true,
+//             msg:otplogin,
+//            });
+
+//        //return res.status(201).json({ message: "Login successful" });
+
+
+//     }
+//     catch(error){
+//         return res.status(400).json({
+//          success:false,
+//          msg:error.message,
+//         });
+//      }
+
+// }
+
+const login = async (req, res) => {
+    try {
+        const { phoneNumber, password } = req.body;
+        const otplogin = otpGenerator.generate(4, { upperCaseAlphabets: false, lowerCaseAlphabets: false, specialChars: false });
+        const cDate = new Date();
+
+        // Find the user by phoneNumber and password
+        const user = await signupModel.findOne({ phoneNumber, password });
+
+        if (!user) {
             return res.status(401).json({ message: "Enter correct phoneNumber or password" });
         }
 
-       
+        // Send OTP to user's phone number
+        // await twilioClient.messages.create({
+        //     body: `Your OTP is ${otplogin}`,
+        //     to: phoneNumber,
+        //     from: process.env.TWILIO_MOBILE_NUMBER,
+        // });
+
         await twilioClient.messages.create({
             body:`Your OTP is${otplogin}`,
             to:phoneNumber,
             from:process.env.TWILIO_MOBILE_NNUMBER,
         });
 
-     
+        // Create a login entry
         await loginModel.create({
             phoneNumber,
             password,
             otplogin,
-        })
-
+        });
 
         return res.status(200).json({
-            success:true,
-            msg:otplogin,
-           });
-
-       //return res.status(201).json({ message: "Login successful" });
-
-
-    }
-    catch(error){
-        return res.status(400).json({
-         success:false,
-         msg:error.message,
+            success: true,
+            msg: otplogin,
         });
-     }
 
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            msg: error.message,
+        });
+    }
 }
 
 module.exports={
