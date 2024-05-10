@@ -64,10 +64,7 @@ const verifyOtp=async(req,res)=>{
 
         console.log(otplogin);
 
-        // const otpData=await otpModel.findOne({
-        //     phoneNumber,
-        //     otp,
-        // });
+        
 
         const loginData=await loginModel.findOne({
             phoneNumber,
@@ -81,12 +78,7 @@ const verifyOtp=async(req,res)=>{
                });
         }
 
-        // if(!otpData){
-        //     return res.status(400).json({
-        //         success:false,
-        //         msg:"Please enter the correct OTP",
-        //        });
-        // }
+       
 
        const isOtpExpired= await otpVerification(loginData.otpExpiration);
 
@@ -118,7 +110,7 @@ const signup=async(req,res)=>{
        
         const{phoneNumber,password}=req.body;
 
-        //const otp=otpGenerator.generate(4,{upperCaseAlphabets:false,lowerCaseAlphabets:false,specialChars:false});
+       
      await signupModel.create({
             phoneNumber,
             password,
@@ -142,59 +134,7 @@ const signup=async(req,res)=>{
      }
 }
 
-// const login=async(req,res)=>{
-//     //res.status(201).json({ message: "LOGIN successful" });
-//     try{
 
-//         const{phoneNumber,password}=req.body;
-//         const otplogin=otpGenerator.generate(4,{upperCaseAlphabets:false,lowerCaseAlphabets:false,specialChars:false});
-//         const cDate=new Date();
-//         // const user=await signupModel.findOneAndUpdate({phoneNumber,password {otp,otpExpiration: new Date(cDate.getTime()) },
-//         // {upsert:true, new:true, setDefaultOnInsert:true, },});
-//         const user = await signupModel.findOneAndUpdate(
-//             { phoneNumber, password },
-//             { otplogin, otpExpiration: new Date(cDate.getTime()) },
-//             { upsert: true, new: true, setDefaultOnInsert: true }
-//         );
-                        
-
-
-//         if(!user){
-//             return res.status(401).json({ message: "Enter correct phoneNumber or password" });
-//         }
-
-       
-//         await twilioClient.messages.create({
-//             body:`Your OTP is${otplogin}`,
-//             to:phoneNumber,
-//             from:process.env.TWILIO_MOBILE_NNUMBER,
-//         });
-
-     
-//         await loginModel.create({
-//             phoneNumber,
-//             password,
-//             otplogin,
-//         })
-
-
-//         return res.status(200).json({
-//             success:true,
-//             msg:otplogin,
-//            });
-
-//        //return res.status(201).json({ message: "Login successful" });
-
-
-//     }
-//     catch(error){
-//         return res.status(400).json({
-//          success:false,
-//          msg:error.message,
-//         });
-//      }
-
-// }
 
 const login = async (req, res) => {
     try {
@@ -209,12 +149,7 @@ const login = async (req, res) => {
             return res.status(401).json({ message: "Enter correct phoneNumber or password" });
         }
 
-        // Send OTP to user's phone number
-        // await twilioClient.messages.create({
-        //     body: `Your OTP is ${otplogin}`,
-        //     to: phoneNumber,
-        //     from: process.env.TWILIO_MOBILE_NUMBER,
-        // });
+        
 
         await twilioClient.messages.create({
             body:`Your OTP is${otplogin}`,
