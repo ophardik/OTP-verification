@@ -14,8 +14,7 @@ connectToMongoDB("mongodb://127.0.0.1:27017/Project-3")
 
 
 app.use("/api",userRoute);
-// app.use("/api/send-otp",userRoute);
-// app.use("api/verify-otp",userRoute);
+
 
 
 app.listen(port,()=>{
