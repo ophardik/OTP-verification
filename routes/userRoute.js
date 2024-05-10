@@ -2,7 +2,7 @@ require("dotenv").config();
 const express=require("express");
 const router = express.Router(); 
 
-//const userController=require("../controller/userController");
+
 const {sendOtp,verifyOtp,signup,login}=require("../controller/userController");
 
 router.post("/send-otp",sendOtp);
