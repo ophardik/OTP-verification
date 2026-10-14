@@ -1,1 +1,34 @@
-/node_modules
+# Secrets — the reason this file exists
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# Runtime / user uploads — never commit these
+uploads/
+invoices/
+tmp/
+
+# Editor and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Tooling config that may hold local state or keys
+.claude/
